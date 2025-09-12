@@ -22,31 +22,31 @@ organization:
 
 auth:
   providers:
-    # okta:
-    #   development:
-    #     clientId: ${AUTH_OKTA_CLIENT_ID}
-    #     clientSecret: ${AUTH_OKTA_CLIENT_SECRET}
-    #     audience: ${AUTH_OKTA_DOMAIN}
-    #     ## uncomment to set lifespan of user session
-    #     # sessionDuration: { hours: 24 } # Optional: supports `ms` library format (e.g. '24h', '2 days'), ISO duration, "human duration" as used in code
-    #     # https://developer.okta.com/docs/reference/api/oidc/#scope-dependent-claims-not-always-returned
-    #     additionalScopes: ${AUTH_OKTA_ADDITIONAL_SCOPES} # Optional
-    #     signIn:
-    #       resolvers:
-    #         # See https://backstage.io/docs/auth/okta/provider#resolvers for more resolvers
-    #         - resolver: emailMatchingUserEntityProfileEmail
-    # github:
-    #   development:
-    #     clientId: ${AUTH_GITHUB_CLIENT_ID}
-    #     clientSecret: ${AUTH_GITHUB_CLIENT_SECRET}
-    #     ## uncomment if using GitHub Enterprise
-    #     # enterpriseInstanceUrl: ${AUTH_GITHUB_ENTERPRISE_INSTANCE_URL}
-    #     ## uncomment to set lifespan of user session
-    #     # sessionDuration: { hours: 24 } # supports `ms` library format (e.g. '24h', '2 days'), ISO duration, "human duration" as used in code
-    #     signIn:
-    #       resolvers:
-    #         # See https://backstage.io/docs/auth/github/provider#resolvers for more resolvers
-    #         - resolver: usernameMatchingUserEntityName
+    okta:
+      development:
+        clientId: ${AUTH_OKTA_CLIENT_ID}
+        clientSecret: ${AUTH_OKTA_CLIENT_SECRET}
+        audience: ${AUTH_OKTA_DOMAIN}
+        ## uncomment to set lifespan of user session
+        # sessionDuration: { hours: 24 } # Optional: supports `ms` library format (e.g. '24h', '2 days'), ISO duration, "human duration" as used in code
+        # https://developer.okta.com/docs/reference/api/oidc/#scope-dependent-claims-not-always-returned
+        additionalScopes: ${AUTH_OKTA_ADDITIONAL_SCOPES} # Optional
+        signIn:
+          resolvers:
+            # See https://backstage.io/docs/auth/okta/provider#resolvers for more resolvers
+            - resolver: emailMatchingUserEntityProfileEmail
+    github:
+      development:
+        clientId: ${AUTH_GITHUB_CLIENT_ID}
+        clientSecret: ${AUTH_GITHUB_CLIENT_SECRET}
+        ## uncomment if using GitHub Enterprise
+        # enterpriseInstanceUrl: ${AUTH_GITHUB_ENTERPRISE_INSTANCE_URL}
+        ## uncomment to set lifespan of user session
+        # sessionDuration: { hours: 24 } # supports `ms` library format (e.g. '24h', '2 days'), ISO duration, "human duration" as used in code
+        signIn:
+          resolvers:
+            # See https://backstage.io/docs/auth/github/provider#resolvers for more resolvers
+            - resolver: usernameMatchingUserEntityName
 
 backend:
   # Used for enabling authentication, secret is shared by all backend plugins
@@ -79,13 +79,13 @@ backend:
   # workingDirectory: /tmp # Use this to configure a working directory for the scaffolder, defaults to the OS temp-dir
 
 integrations:
-  # github:
-  #   - host: github.com
-  #     apps:
-  #       - appId: ${AUTH_ORG_APP_ID}
-  #         clientId: ${AUTH_ORG_CLIENT_ID}
-  #         clientSecret: ${AUTH_ORG_CLIENT_SECRET}
-  #         privateKey: ${AUTH_ORG1_PRIVATE_KEY}
+  github:
+    - host: github.com
+      apps:
+        - appId: ${AUTH_ORG_APP_ID}
+          clientId: ${AUTH_ORG_CLIENT_ID}
+          clientSecret: ${AUTH_ORG_CLIENT_SECRET}
+          privateKey: ${AUTH_ORG1_PRIVATE_KEY}
   #         webhookSecret: ${AUTH_ORG_WEBHOOK_SECRET} # webhookSecret is optional, not required if not using GH events
 
 proxy:
