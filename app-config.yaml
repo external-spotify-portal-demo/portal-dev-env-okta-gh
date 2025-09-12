@@ -1,5 +1,5 @@
 app:
-  title: Scaffolded Backstage App
+  title: Portal Developer Environment
   baseUrl: http://localhost:3000
 
   # Enable all packages by default, this will discover packages from packages/app/package.json
@@ -17,9 +17,36 @@ app:
         config:
           path: /
 
-
 organization:
-  name: My Company
+  name: Portal Developer Environment
+
+auth:
+  providers:
+    # okta:
+    #   development:
+    #     clientId: ${AUTH_OKTA_CLIENT_ID}
+    #     clientSecret: ${AUTH_OKTA_CLIENT_SECRET}
+    #     audience: ${AUTH_OKTA_DOMAIN}
+    #     ## uncomment to set lifespan of user session
+    #     # sessionDuration: { hours: 24 } # Optional: supports `ms` library format (e.g. '24h', '2 days'), ISO duration, "human duration" as used in code
+    #     # https://developer.okta.com/docs/reference/api/oidc/#scope-dependent-claims-not-always-returned
+    #     additionalScopes: ${AUTH_OKTA_ADDITIONAL_SCOPES} # Optional
+    #     signIn:
+    #       resolvers:
+    #         # See https://backstage.io/docs/auth/okta/provider#resolvers for more resolvers
+    #         - resolver: emailMatchingUserEntityProfileEmail
+    # github:
+    #   development:
+    #     clientId: ${AUTH_GITHUB_CLIENT_ID}
+    #     clientSecret: ${AUTH_GITHUB_CLIENT_SECRET}
+    #     ## uncomment if using GitHub Enterprise
+    #     # enterpriseInstanceUrl: ${AUTH_GITHUB_ENTERPRISE_INSTANCE_URL}
+    #     ## uncomment to set lifespan of user session
+    #     # sessionDuration: { hours: 24 } # supports `ms` library format (e.g. '24h', '2 days'), ISO duration, "human duration" as used in code
+    #     signIn:
+    #       resolvers:
+    #         # See https://backstage.io/docs/auth/github/provider#resolvers for more resolvers
+    #         - resolver: usernameMatchingUserEntityName
 
 backend:
   # Used for enabling authentication, secret is shared by all backend plugins
@@ -41,6 +68,9 @@ backend:
     origin: http://localhost:3000
     methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
     credentials: true
+  reading:
+    allow:
+      - host: demo.backstage.io
   # This is for local development only, it is not recommended to use this in production
   # The production database configuration is stored in app-config.production.yaml
   database:
@@ -49,15 +79,14 @@ backend:
   # workingDirectory: /tmp # Use this to configure a working directory for the scaffolder, defaults to the OS temp-dir
 
 integrations:
-  github:
-    - host: github.com
-      # This is a Personal Access Token or PAT from GitHub. You can find out how to generate this token, and more information
-      # about setting up the GitHub integration here: https://backstage.io/docs/integrations/github/locations#configuration
-      token: ${GITHUB_TOKEN}
-    ### Example for how to add your GitHub Enterprise instance using the API:
-    # - host: ghe.example.net
-    #   apiBaseUrl: https://ghe.example.net/api/v3
-    #   token: ${GHE_TOKEN}
+  # github:
+  #   - host: github.com
+  #     apps:
+  #       - appId: ${AUTH_ORG_APP_ID}
+  #         clientId: ${AUTH_ORG_CLIENT_ID}
+  #         clientSecret: ${AUTH_ORG_CLIENT_SECRET}
+  #         privateKey: ${AUTH_ORG1_PRIVATE_KEY}
+  #         webhookSecret: ${AUTH_ORG_WEBHOOK_SECRET} # webhookSecret is optional, not required if not using GH events
 
 proxy:
   ### Example for how to add a proxy endpoint for the frontend.
@@ -78,12 +107,6 @@ techdocs:
   publisher:
     type: 'local' # Alternatives - 'googleGcs' or 'awsS3'. Read documentation for using alternatives.
 
-auth:
-  # see https://backstage.io/docs/auth/ to learn about auth providers
-  providers:
-    # See https://backstage.io/docs/auth/guest/provider
-    guest: {}
-
 scaffolder:
   # see https://backstage.io/docs/features/software-templates/configuration for software template options
 
@@ -92,23 +115,42 @@ catalog:
     entityFilename: catalog-info.yaml
     pullRequestBranchName: backstage-integration
   rules:
-    - allow: [Component, System, API, Resource, Location]
+    - allow: [Component, System, API, Resource, Location, Template, User, Group]
+  providers:
+    # ingest user and group data from your Github organization
+    githubOrg:
+      - id: github
+        githubUrl: # inserts your base url e.g. https://company.ghe.com
+        orgs: # insert your org e.g. ['backstage-team']
+        schedule:
+          initialDelay: { seconds: 15 }
+          frequency: { hours: 1 }
+          timeout: { minutes: 10 }
+    # use discovery to ingest software component data from your Github organization
+    github:
+      githubComponentProvider:
+        organization: # insert your org e.g. 'backstage-portal-demo'
+        host: # insert your host url e.g. company.ghe.com
+        schedule:
+          initialDelay: { seconds: 120 }
+          frequency: { hours: 1 }
+          timeout: { minutes: 10 }
   locations:
+    # Local example okta organizational data
+    # - type: file
+    #   target: ../../examples/okta-org.yaml
+    #   rules:
+    #     - allow: [User, Group]
+
     # Local example data, file locations are relative to the backend process, typically `packages/backend`
-    - type: file
-      target: ../../examples/entities.yaml
+    # - type: file
+    #   target: ../../examples/entities.yaml
 
     # Local example template
-    - type: file
-      target: ../../examples/template/template.yaml
-      rules:
-        - allow: [Template]
-
-    # Local example organizational data
-    - type: file
-      target: ../../examples/org.yaml
-      rules:
-        - allow: [User, Group]
+    # - type: file
+    #   target: ../../examples/template/template.yaml
+    #   rules:
+    #     - allow: [Template]
 
     ## Uncomment these lines to add more example data
     # - type: url
