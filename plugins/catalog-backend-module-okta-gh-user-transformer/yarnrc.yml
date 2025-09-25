@@ -1,0 +1,1 @@
+npmAuthToken: ${PORTAL_PUBLISHING_TOKEN}

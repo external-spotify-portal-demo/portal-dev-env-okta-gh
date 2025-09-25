@@ -64,9 +64,14 @@ backend.add(import('@backstage/plugin-catalog-backend-module-github-org'));
 backend.add(import('@backstage/plugin-catalog-backend-module-github'));
 backend.add(import('@backstage/plugin-events-backend-module-github'));
 
-// UNCOMMENT TO MATCH OKTA USER AUTH TO GITHUB USER ENTITY VIA EMAIL
+// UNCOMMENT TO MATCH OKTA USER AUTH TO GITHUB USER ENTITY VIA EMAIL WITH MODULE EXTENSION
+// backend.add(import('@portal-internal/plugin-catalog-backend-module-okta-gh-user-transformer'));
+// UNCOMMENT TO MATCH OKTA USER AUTH TO GITHUB USER ENTITY VIA EMAIL WITH MODULE EXTENSION
+
+
+// UNCOMMENT TO MATCH OKTA USER AUTH TO GITHUB USER ENTITY VIA EMAIL WITH LOCAL FILES
 // backend.add(githubOrgModule);
-// UNCOMMENT TO MATCH OKTA USER AUTH TO GITHUB USER ENTITY VIA EMAIL
+// UNCOMMENT TO MATCH OKTA USER AUTH TO GITHUB USER ENTITY VIA EMAIL WITH LOCAL FILES
 
 // See https://backstage.io/docs/features/software-catalog/configuration#subscribing-to-catalog-errors
 backend.add(import('@backstage/plugin-catalog-backend-module-logs'));
